@@ -4,39 +4,77 @@ const speed = 100
 var current_direction = "none"
 @onready var animated_sprite = $AnimatedSprite2D
 
+var last_key_pressed = Vector2.ZERO
+
 func _ready():
 	animated_sprite.play("front_idle")
 
 func _physics_process(delta):
-	player_movement(delta)
-
-func player_movement(delta):
-	if Input.is_action_pressed("ui_right"):
-		current_direction = "right"
-		play_animation(true)
-		velocity.x = speed
-		velocity.y = 0
-	elif Input.is_action_pressed("ui_left"):
-		current_direction = "left"
-		play_animation(true)
-		velocity.x = -speed
-		velocity.y = 0
-	elif Input.is_action_pressed("ui_down"):
-		current_direction = "down"
-		play_animation(true)
-		velocity.x = 0
-		velocity.y = speed
-	elif Input.is_action_pressed("ui_up"):
-		current_direction = "up"
-		play_animation(true)
-		velocity.x = 0
-		velocity.y = -speed
-	else:
+	#if Input.is_action_pressed("ui_right"):
+		#current_direction = "right"
+		#play_animation(true)
+		#velocity.x = speed
+		#velocity.y = 0
+	#elif Input.is_action_pressed("ui_left"):
+		#current_direction = "left"
+		#play_animation(true)
+		#velocity.x = -speed
+		#velocity.y = 0
+	#elif Input.is_action_pressed("ui_down"):
+		#current_direction = "down"
+		#play_animation(true)
+		#velocity.x = 0
+		#velocity.y = speed
+	#elif Input.is_action_pressed("ui_up"):
+		#current_direction = "up"
+		#play_animation(true)
+		#velocity.x = 0
+		#velocity.y = -speed
+	#else:
+		#play_animation(false)
+		#velocity.x = 0
+		#velocity.y = 0
+	
+	var direction = get_movement_direction()
+	if direction == Vector2(0,0):
 		play_animation(false)
 		velocity.x = 0
 		velocity.y = 0
+	elif abs(direction.x) >= abs(direction.y):
+		if direction.x > 0:
+			current_direction = "right"
+			play_animation(true)
+			velocity.x = speed
+			velocity.y = 0
+		elif direction.x < 0:
+			current_direction = "left"
+			play_animation(true)
+			velocity.x = -speed
+			velocity.y = 0
+	else:
+		if direction.y > 0:
+			current_direction = "down"
+			play_animation(true)
+			velocity.x = 0
+			velocity.y = speed
+		elif direction.y < 0:
+			current_direction = "up"
+			play_animation(true)
+			velocity.x = 0
+			velocity.y = -speed
 	
 	move_and_slide()
+
+func get_movement_direction():
+	var direction = Vector2()
+	direction.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
+	direction.y = Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
+	if abs(direction.x) >= abs(direction.y):
+		direction.y = 0
+	else:
+		direction.x = 0
+	
+	return direction.normalized()
 
 func play_animation(movement):
 	var direction = current_direction
