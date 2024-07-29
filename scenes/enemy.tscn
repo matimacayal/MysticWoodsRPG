@@ -127,11 +127,11 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_gnavx"]
-radius = 56.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_npbj2"]
 radius = 5.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gnavx"]
+radius = 56.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_he0g7"]
 radius = 11.0
@@ -146,6 +146,10 @@ position = Vector2(0, -5)
 sprite_frames = SubResource("SpriteFrames_5xoby")
 animation = &"idle"
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_npbj2")
+
 [node name="detection_area" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
@@ -153,9 +157,9 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 shape = SubResource("CircleShape2D_gnavx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -3)
-shape = SubResource("CircleShape2D_npbj2")
+[node name="Timer" type="Timer" parent="detection_area"]
+wait_time = 5.0
+one_shot = true
 
 [node name="enemy_hitbox" type="Area2D" parent="."]
 collision_layer = 8
@@ -171,6 +175,7 @@ shape = SubResource("CircleShape2D_he0g7")
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
+[connection signal="timeout" from="detection_area/Timer" to="." method="_on_timer_timeout"]
 [connection signal="body_entered" from="enemy_hitbox" to="enemy_hitbox" method="_on_body_entered"]
 [connection signal="body_exited" from="enemy_hitbox" to="enemy_hitbox" method="_on_body_exited"]
 [connection signal="timeout" from="enemy_hitbox/Timer" to="enemy_hitbox" method="_on_timer_timeout"]
