@@ -1,7 +1,8 @@
-[gd_scene load_steps=21 format=3 uid="uid://cgpm0tblno2bu"]
+[gd_scene load_steps=23 format=3 uid="uid://cgpm0tblno2bu"]
 
 [ext_resource type="Texture2D" uid="uid://crc5nptfm666x" path="res://assets/sprites/characters/slime.png" id="1_g7m2h"]
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_pnn5d"]
+[ext_resource type="Script" path="res://scripts/enemy_hitbox.gd" id="3_fgbsg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ys8wu"]
 atlas = ExtResource("1_g7m2h")
@@ -81,7 +82,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0aaky")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 5.0
 }, {
@@ -132,8 +133,12 @@ radius = 56.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_npbj2"]
 radius = 5.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_he0g7"]
+radius = 11.0
+
 [node name="Enemy" type="CharacterBody2D"]
-collision_layer = 5
+collision_layer = 8
+collision_mask = 6
 script = ExtResource("1_pnn5d")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -143,7 +148,7 @@ animation = &"idle"
 
 [node name="detection_area" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 2
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 shape = SubResource("CircleShape2D_gnavx")
@@ -152,5 +157,20 @@ shape = SubResource("CircleShape2D_gnavx")
 position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_npbj2")
 
+[node name="enemy_hitbox" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 4
+script = ExtResource("3_fgbsg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="enemy_hitbox"]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_he0g7")
+
+[node name="Timer" type="Timer" parent="enemy_hitbox"]
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
+[connection signal="body_entered" from="enemy_hitbox" to="enemy_hitbox" method="_on_body_entered"]
+[connection signal="body_exited" from="enemy_hitbox" to="enemy_hitbox" method="_on_body_exited"]
+[connection signal="timeout" from="enemy_hitbox/Timer" to="enemy_hitbox" method="_on_timer_timeout"]

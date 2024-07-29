@@ -56,6 +56,12 @@ attack={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_2="World"
+2d_physics/layer_3="Player"
+2d_physics/layer_4="Enemies"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

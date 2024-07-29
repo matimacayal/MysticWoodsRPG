@@ -10,31 +10,6 @@ func _ready():
 	animated_sprite.play("front_idle")
 
 func _physics_process(delta):
-	#if Input.is_action_pressed("ui_right"):
-		#current_direction = "right"
-		#play_animation(true)
-		#velocity.x = speed
-		#velocity.y = 0
-	#elif Input.is_action_pressed("ui_left"):
-		#current_direction = "left"
-		#play_animation(true)
-		#velocity.x = -speed
-		#velocity.y = 0
-	#elif Input.is_action_pressed("ui_down"):
-		#current_direction = "down"
-		#play_animation(true)
-		#velocity.x = 0
-		#velocity.y = speed
-	#elif Input.is_action_pressed("ui_up"):
-		#current_direction = "up"
-		#play_animation(true)
-		#velocity.x = 0
-		#velocity.y = -speed
-	#else:
-		#play_animation(false)
-		#velocity.x = 0
-		#velocity.y = 0
-	
 	var direction = get_movement_direction()
 	if direction == Vector2(0,0):
 		play_animation(false)
