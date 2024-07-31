@@ -1,5 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://dgi5c2cyah1pj"]
+[gd_scene load_steps=12 format=3 uid="uid://dgi5c2cyah1pj"]
 
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_8chh7"]
 [ext_resource type="Texture2D" uid="uid://by87k8gmoh7e1" path="res://assets/sprites/tilesets/grass.png" id="1_hcfmm"]
 [ext_resource type="Texture2D" uid="uid://c74iqt6m2fo2n" path="res://assets/sprites/tilesets/plains.png" id="2_a5vwb"]
 [ext_resource type="Texture2D" uid="uid://d0aodxha006nm" path="res://assets/sprites/objects/objects.png" id="3_uqesi"]
@@ -148,8 +149,12 @@ sources/0 = SubResource("TileSetAtlasSource_mxmu8")
 sources/1 = SubResource("TileSetAtlasSource_1ng7f")
 sources/4 = SubResource("TileSetAtlasSource_0aq3a")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pchrp"]
+size = Vector2(41, 17)
+
 [node name="World" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_8chh7")
 
 [node name="TileMap" type="TileMap" parent="."]
 y_sort_enabled = true
@@ -164,7 +169,36 @@ layer_2/y_sort_enabled = true
 layer_2/tile_data = PackedInt32Array(2, 655364, 7, 262150, 655364, 7, 655368, 655364, 7, 262163, 655364, 7, 24, 655364, 7, 131077, 524292, 6, 6, 524292, 6, 65549, 524292, 6, 131094, 524292, 6, 524311, 524292, 6, 655376, 524292, 6, 589829, 524292, 6, 589836, 393220, 7, 19, 393220, 7, 655381, 393220, 7, 589825, 4, 5, 9, 4, 5, 262161, 4, 5, 720900, 4, 1, 196616, 4, 1, 720915, 4, 1, 196633, 4, 1, 65559, 4, 1, 131083, 327684, 0, 655371, 327684, 0, 196620, 4, 0)
 
 [node name="Enemy" parent="." instance=ExtResource("5_ygqw8")]
-position = Vector2(244, 26)
+position = Vector2(249, 50)
 
 [node name="Player2" parent="." instance=ExtResource("5_vn5w3")]
 position = Vector2(59, 102)
+
+[node name="Camera2D" type="Camera2D" parent="Player2"]
+position = Vector2(2.08165e-12, 2.08165e-12)
+zoom = Vector2(4, 4)
+limit_left = 0
+limit_top = 0
+limit_right = 416
+limit_bottom = 192
+limit_smoothed = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+
+[node name="Map Border" type="StaticBody2D" parent="."]
+position = Vector2(2, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Map Border"]
+polygon = PackedVector2Array(414, 46, 414, 192, -2, 192, -2, 1, -21, 1, -22, 208, 436, 209, 436, -19, -21, -22, -21, 0, 174, 0, 174, -17, 215, -17, 215, 0, 258, 0, 259, 29, 288, 31, 291, 47)
+
+[node name="Cliffside transition area" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cliffside transition area"]
+position = Vector2(196.5, -8.5)
+shape = SubResource("RectangleShape2D_pchrp")
+
+[connection signal="body_entered" from="Cliffside transition area" to="." method="_on_cliffside_transition_area_body_entered"]
