@@ -3,13 +3,14 @@ extends CharacterBody2D
 var speed = 40
 var player_chase = false
 var player = null
-var health = 20
+var health = 100
 var dying = false
 var initial_position = null
 var returning = false
 
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var timer = $detection_area/Timer
+@onready var healthbar = $Healthbar
 
 func _ready():
 	initial_position = position
@@ -54,6 +55,8 @@ func _physics_process(delta):
 		return
 	
 	move_and_collide(velocity)
+	
+	update_health()
 
 func _on_detection_area_body_entered(body):
 	player = body
@@ -83,4 +86,11 @@ func _on_animated_sprite_2d_animation_finished():
 	if health <= 0:
 		queue_free()
 
+
+func update_health():
+	healthbar.value = health
+	if health >= 100:
+		healthbar.visible = false
+	else:
+		healthbar.visible = true
 

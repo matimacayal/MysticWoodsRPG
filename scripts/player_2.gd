@@ -5,6 +5,8 @@ var speed = 100
 @onready var animation = $AnimationPlayer
 @onready var sprite = $Sprite2D
 @onready var hitbox = $player_hitbox/CollisionShape2D
+@onready var healthbar = $Healthbar
+
 
 var last_direction = "down" # (default to down or "front")
 var attacking = false
@@ -26,6 +28,8 @@ func _physics_process(delta):
 	play_movement_animations()
 	
 	attack_animations()
+	
+	update_health()
 
 func get_movement_direction():
 	var direction = Vector2()
@@ -99,3 +103,22 @@ func take_hit(damage):
 	if health <= 0:
 		dying = true
 		animation.play("death")
+
+func update_health():
+	healthbar.value = health
+	if health >= 100:
+		healthbar.visible = false
+	else:
+		healthbar.visible = true
+
+func _on_regeneration_timer_timeout():
+	if health < 100:
+		health = health + 20
+		if health > 100:
+			health = 100
+	if health <= 0:
+		health
+
+
+
+

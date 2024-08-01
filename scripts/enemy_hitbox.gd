@@ -4,7 +4,7 @@ extends Area2D
 @onready var timer = $Timer
 
 var entered_body = null
-var damage = 10
+var damage = 30
 
 func _on_body_entered(body):
 	print(body)
